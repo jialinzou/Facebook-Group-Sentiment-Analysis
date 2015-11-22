@@ -1,0 +1,1 @@
+# http_client_settings.py contains settings for the http_client.py

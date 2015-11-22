@@ -17,10 +17,10 @@ class Oauth2YelpAuthenticator(object):
         #       constructor for Oauth2YelpAuthenticator, there are multiple keys required
         #       which can be found at https://www.yelp.com/developers/manage_api_keys
         # Arguments:
-        #       CONSUMER_KEY    (string) : consumer key
-        #       CONSUMER_SECRET (string) : consumer secret
-        #       TOKEN           (string) : token
-        #       TOKEN_SECRET    (string) : token key
+        #       consumer_key    (string) : consumer key
+        #       consumer_secret (string) : consumer secret
+        #       token           (string) : token
+        #       token_secret    (string) : token key
         # Return:
         #       None
 
@@ -38,15 +38,13 @@ class Oauth2YelpAuthenticator(object):
 
     def sign_url(self, url, method, parameters):
         # Usage:
-        #       constructor for Oauth2YelpAuthenticator, there are multiple keys required
-        #       which can be found at https://www.yelp.com/developers/manage_api_keys
+        #       Signs a url using consumer key and token
         # Arguments:
-        #       CONSUMER_KEY    (string) : consumer key
-        #       CONSUMER_SECRET (string) : consumer secret
-        #       TOKEN           (string) : token
-        #       TOKEN_SECRET    (string) : token key
+        #       url        (string) : the url that we want to send our request to
+        #       method     (string) : type of HTTP method
+        #       parameters (string) : parameters for the HTTP request
         # Return:
-        #       None
+        #       signed_url (string) : a signed url using consumer key and token
 
         # Get a request with our parameters
         oauth_request = oauth2.Request(method=method, url=url, parameters=parameters)
