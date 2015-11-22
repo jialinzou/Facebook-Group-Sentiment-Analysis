@@ -32,7 +32,7 @@ class TestHttpClient(unittest.TestCase):
         responses = map(lambda x : x.result(), responses)
 
         # Assert if the number of responses is equal to 1
-        self.assertTrue(len(responses), 1)
+        self.assertEquals(len(responses), 1)
 
         # Assert if the response code of the first response is 200
-        self.assertTrue(responses[0].code, 200)
+        self.assertEquals(responses[0].code, 200)

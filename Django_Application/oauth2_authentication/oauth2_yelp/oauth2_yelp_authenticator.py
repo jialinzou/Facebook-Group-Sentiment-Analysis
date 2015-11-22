@@ -12,7 +12,7 @@ class Oauth2YelpAuthenticator(object):
                  consumer_key = yelp_oauth2_settings.CONSUMER_KEY,
                  consumer_secret = yelp_oauth2_settings.CONSUMER_SECRET,
                  token = yelp_oauth2_settings.TOKEN,
-                 token_secret = yelp_oauth2_settings.TOKEN):
+                 token_secret = yelp_oauth2_settings.TOKEN_SECRET):
         # Usage:
         #       constructor for Oauth2YelpAuthenticator, there are multiple keys required
         #       which can be found at https://www.yelp.com/developers/manage_api_keys
@@ -31,10 +31,10 @@ class Oauth2YelpAuthenticator(object):
         self.token_secret = token_secret
 
         # Create a consumer that we can later use to create sign our oauth request
-        self.consumer = oauth2.Consumer(self.consumer_key, self.consumer_secret)
+        self.consumer_oauth2 = oauth2.Consumer(self.consumer_key, self.consumer_secret)
 
         # Create a token with our token and token secret
-        self.token = oauth2.Token(self.token, self.token_secret)
+        self.token_oauth2 = oauth2.Token(self.token, self.token_secret)
 
     def sign_url(self, url, method, parameters):
         # Usage:
@@ -60,7 +60,7 @@ class Oauth2YelpAuthenticator(object):
         )
 
         # Sign our request with HMAC SHA1
-        oauth_request.sign_request(oauth2.SignatureMethod_HMAC_SHA1(), self.consumer, self.token)
+        oauth_request.sign_request(oauth2.SignatureMethod_HMAC_SHA1(), self.consumer_oauth2, self.token_oauth2)
 
         # Return our oauth request
         return oauth_request.to_url()
