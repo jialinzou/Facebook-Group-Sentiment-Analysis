@@ -6,5 +6,8 @@ import us
 # and can call .name to get the name of the state
 states_of_us = map(lambda x : x.name, us.states.STATES)
 
+# The number of states
+num_of_states = len(states_of_us)
+
 # The number of businesses we should get
 num_businesses = 20

@@ -40,7 +40,7 @@ class HTTPClient(object):
         self.url_current = 0
 
         # Return an array of fetched URL, and pass a callback
-        return [self.http_client.fetch(url, self.increment_if_stop) for url in urls]
+        return [self.http_client.fetch(url, callback=self.increment_if_stop, connect_timeout=360, request_timeout=360) for url in urls]
 
     def increment_if_stop(self, response):
         # Usage:
@@ -49,6 +49,10 @@ class HTTPClient(object):
         #       response (string) : a string representation of a response
         # Return:
         #       None
+
+        # If any error is detected, then print
+        if response.error:
+            print "Error:%s, Body:%s" % (response.error, response.body)
 
         # Increment the url_current
         self.url_current += 1
@@ -80,3 +84,4 @@ class HTTPClient(object):
 
         # Directly start an ioloop
         self.io_loop.start()
+
