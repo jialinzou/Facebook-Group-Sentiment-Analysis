@@ -1,0 +1,9 @@
+doc-warnings: yes
+test-warnings: yes
+strictness: veryhigh
+uses:
+    - django
+    - celery
+autodetect: yes
+requirements:
+    - Python_Requirements/requirements.txt
