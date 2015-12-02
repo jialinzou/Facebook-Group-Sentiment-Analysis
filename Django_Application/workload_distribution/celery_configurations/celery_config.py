@@ -9,7 +9,7 @@ CELERY_IMPORTS = ('data_extraction.yelp_data_extractor.yelp_extractor', )
 # Uses MongoDB as a backend
 CELERY_RESULT_BACKEND = 'mongodb://localhost:27017/'
 
-# MongoDB as a backened celery settings
+# MongoDB as a backend celery settings tensor flow
 CELERY_MONGODB_BACKEND_SETTINGS = {
     'database': 'celery',
     'taskmeta_collection': 'celery_collection',

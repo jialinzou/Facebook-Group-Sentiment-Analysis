@@ -1,5 +1,5 @@
-import shared_executor_settings
 from concurrent import futures
+import shared_executor_settings
 
 # shared_executors.py will create our thread pools, and this can be shared around different python files modules.
 

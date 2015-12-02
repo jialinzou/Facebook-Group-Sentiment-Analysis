@@ -1,18 +1,20 @@
 import json
-import yelp_extractor_settings
-import yelp_extractor_api
-import urlparse
-import urllib
-import requests
 import math
 import random
-from bs4 import BeautifulSoup
-from oauth2_authentication.oauth2_yelp.oauth2_yelp_authenticator import Oauth2YelpAuthenticator
-from tornado_http_client.http_client import HTTPClient
+import requests
+import urllib
+import urlparse
 import tornado.httpclient
+import yelp_extractor_api
+import yelp_extractor_settings
+from bs4 import BeautifulSoup
 from celery import Celery
+from library.custom_exceptions.data_extraction_error import DataExtractionError
+from library.oauth2_authentication.oauth2_yelp.oauth2_yelp_authenticator import Oauth2YelpAuthenticator
+from library.tornado_http_client.http_client import HTTPClient
 
 # yelp_extractor.py contains the yelp_extractor class to get reviews and businesses on yelp
+
 
 class YelpExtractor(object):
     # Usage:
@@ -21,13 +23,13 @@ class YelpExtractor(object):
 
     # Sets up the celery object, and loads configuration from celery_configurations folder
     task_queue = Celery()
-    task_queue.config_from_object('celery_configurations.celery_config')
+    task_queue.config_from_object('workload_distribution.celery_configurations.celery_config')
 
     # HTTP Clients:
     #   http_client      (object) : an async http client from tornado
     #   sync_http_client (object) : a blocking http client from requests
     # These are HTTP Clients that are used inside the YelpExtractor, and should not be passed
-    # nor overridden into the constructor since they are not picklable
+    # nor overridden into the constructor since they are not picklable (serialize)
     http_client = HTTPClient()
     sync_http_client = requests
 
@@ -185,6 +187,8 @@ class YelpExtractor(object):
 
         # We want to make a dictionary of ID, Review Text, and Stars using beautifulsoup
         reviews_info = []
+
+        # Responses will contain multiple responses with body, we need to loop through them
         for body in responses:
             # Create a soup using the body, and a html parser
             soup = BeautifulSoup(body, 'html.parser')
@@ -302,10 +306,16 @@ class YelpExtractor(object):
         current_reviews = 0
 
         # A flag indicating that we have exhausted our API calls
-        api_exhuast = False
+        api_exhaust = False
+
+        # A flag indicating that there might be an captcha issue
+        api_captcha = False
+
+        # A flag indicating that someone else is wrong
+        unknown_error = False
 
         # Keep looping until we get the specified amount of reviews
-        while current_reviews != reviews_required and api_exhuast == False:
+        while current_reviews != reviews_required and not any((api_exhaust, api_captcha, unknown_error)):
 
             # It is possible that we will exhaust the yelp API
             try:
@@ -340,11 +350,39 @@ class YelpExtractor(object):
                 # Create a flat list out of the URLs data
                 review_data = reduce(lambda x,y: x+y, review_data)
 
-                return review_data
+                # If we got nothing from our review_data, then it means we have encountered
+                # captcha, which requires us to give extra inputs before proceeding
+                if not review_data:
+                    # Yield the review, so that the review will be passed back
+                    yield dict(data=None, exception=DataExtractionError(message=str("Captcha Error"), errors="Requires captcha input"))
+
+                    # Set captcha to be True, and end the while loop
+                    api_captcha = True
+
+                # Loop through the flattened list of review_data
+                for review in review_data:
+
+                    # Increment current_reviews
+                    current_reviews += 1
+
+                    # Yield the review, so that the review will be passed back
+                    yield dict(data=review, exception=None)
+
+                    # If the amount of required reviews has achieved, then
+                    # break from the for loop
+                    if current_reviews == reviews_required:
+                        break
 
             except tornado.httpclient.HTTPError as e:
-                # We had exhausted our yelp API requests
-                print "HTTP Error:" + str(e)
+                # Yield our data with our exception we had exhausted our yelp API requests
+                yield dict(data=None, exception=DataExtractionError(message=str("HTTP Error"), errors="Code:%s, Message:%s, Response:%s" % (e.code, e.message, e.response)))
 
                 # Flag indicating that we have exhausted our API counts
-                api_exhuast = True
+                api_exhaust = True
+
+            except Exception as e:
+                # Yield our data with our exception we had an unknown error
+                yield dict(data=None, exception=DataExtractionError(message=str("Unknown Error"), errors=str(e)))
+
+                # Flag indicating that we have exhausted our API counts
+                unknown_error = True

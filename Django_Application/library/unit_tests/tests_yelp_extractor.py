@@ -1,17 +1,19 @@
-import unittest
-import us
-import urlparse
 import json
-from data_extraction.yelp_data_extractor.yelp_extractor import YelpExtractor
-from data_extraction.yelp_data_extractor.yelp_extractor_settings import num_businesses
+import unittest
+import urlparse
+import us
+from library.custom_exceptions.data_extraction_error import DataExtractionError
+from library.data_extraction.yelp_data_extractor.yelp_extractor import YelpExtractor
+from library.data_extraction.yelp_data_extractor.yelp_extractor_settings import num_businesses
 
 # tests_yelp_extractor.py contains tests for testing our yelp extractor
+
 
 class TestYelpExtractor(unittest.TestCase):
     #   Usage:
     #       Tests for the yelp extractor
 
-    def setUp(self, yelp_extractor = YelpExtractor()):
+    def setUp(self, yelp_extractor=YelpExtractor()):
         # Usage:
         #       Constructor for TestYelpExtractor. Used for setting the yelp extractor
         # Arguments:
@@ -187,7 +189,7 @@ class TestYelpExtractor(unittest.TestCase):
         #       None
 
         # Get a new set of urls
-        urls = self.yelp_extractor.get_search_urls(self.yelp_extractor, num_business=10, states_to_retrieve=2)
+        urls = self.yelp_extractor.get_search_urls(self.yelp_extractor, num_business=1, states_to_retrieve=1)
 
         # Get the business info from each url
         responses = self.yelp_extractor.get_search_info(self.yelp_extractor, urls)
@@ -218,3 +220,34 @@ class TestYelpExtractor(unittest.TestCase):
 
         # Assert that star should a float
         self.assertIn("float", str(type(review_data[0]["star"])))
+
+    def test_08_celery_extraction(self):
+        # Usage:
+        #       Uses the distributed_find_reviews to test if we can get
+        #       results through celery
+        # Arguments:
+        #       None
+
+        # The number of results that we want
+        results_required = 10
+
+        # Temporary store the results
+        results_store = []
+
+        # We want 10 results, and if we have 1 parallel API, then it means that we will
+        # get parallel_api * random_states * business_per_state results, which is
+        # 1 * 2 * 5 = 10 results
+        for result in self.yelp_extractor.distributed_find_reviews(reviews_required=results_required, offset_max=0,
+                                                                   random_states=1, business_per_state=1, parallel_search_api=1):
+
+            # Store the results
+            results_store.append(result["data"])
+
+            # Should have no exceptions
+            self.assertFalse(isinstance(result["exception"], DataExtractionError))
+
+        # Assert that we have 10 items
+        self.assertTrue(len(results_store) == results_required)
+
+        # Assert that we have no None inside our results_store array
+        self.assertTrue(None not in results_store)

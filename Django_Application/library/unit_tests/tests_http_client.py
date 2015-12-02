@@ -1,5 +1,5 @@
 import unittest
-from tornado_http_client.http_client import HTTPClient
+from library.tornado_http_client.http_client import HTTPClient
 
 # tests_http_client.py contains tests for testing our tornado_http_client
 
@@ -7,7 +7,7 @@ class TestHttpClient(unittest.TestCase):
     #   Usage:
     #       Tests for the HTTP client.
 
-    def setUp(self, http_client = HTTPClient()):
+    def setUp(self, http_client=HTTPClient()):
         # Usage:
         #       Constructor for TestHttpClient. Used for setting the http_client.
         # Arguments:
