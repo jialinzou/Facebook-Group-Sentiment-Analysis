@@ -2,4 +2,4 @@ tornado
 celery
 us
 requests
-oauth2 // pip install oauth2 (note: not 'python-oauth2')
+oauth2

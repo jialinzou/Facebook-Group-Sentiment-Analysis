@@ -1,6 +1,5 @@
 from django.db import models
 
-# Create your models here.
 class YelpReview(models.Model):
     # Usage:
     #   YelpReview Model, this is used to store each reviews
@@ -12,3 +11,6 @@ class YelpReview(models.Model):
     id = models.CharField(max_length=100, primary_key=True)
     review_text = models.TextField()
     star = models.FloatField()
+    
+    def __unicode__(self):
+        return self.id
