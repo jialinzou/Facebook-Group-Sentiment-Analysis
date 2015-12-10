@@ -19,7 +19,7 @@ from library.tornado_http_client.http_client import HTTPClient
 class YelpExtractor(object):
     # Usage:
     #       This class is responsible for using oauth2 to send yelp API requests
-    #       to yelp URL endpoints.
+    #       to yelp URL endpoints, and extract yelp review data.
 
     # Sets up the celery object, and loads configuration from celery_configurations folder
     task_queue = Celery()

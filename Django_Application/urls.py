@@ -18,4 +18,5 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^facebook_sentiment_analysis/', include('application.facebook_sentiment_analysis.urls', namespace="facebook_sentiment_analysis")),
 ]

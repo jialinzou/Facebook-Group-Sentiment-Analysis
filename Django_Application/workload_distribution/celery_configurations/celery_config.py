@@ -4,7 +4,7 @@ from kombu import Exchange, Queue
 BROKER_URL = 'amqp://guest:guest@localhost:5672//'
 
 # List of modules to import when celery starts.
-CELERY_IMPORTS = ('data_extraction.yelp_data_extractor.yelp_extractor', )
+CELERY_IMPORTS = ('library.data_extraction.yelp_data_extractor.yelp_extractor',)
 
 # Uses MongoDB as a backend
 CELERY_RESULT_BACKEND = 'mongodb://localhost:27017/'
