@@ -4,7 +4,8 @@ from kombu import Exchange, Queue
 BROKER_URL = 'amqp://guest:guest@localhost:5672//'
 
 # List of modules to import when celery starts.
-CELERY_IMPORTS = ('library.data_extraction.yelp_data_extractor.yelp_extractor',)
+CELERY_IMPORTS = ('library.data_extraction.yelp_data_extractor.yelp_extractor',
+                  'library.data_extraction.facebook_data_extractor.facebook_extractor')
 
 # Uses MongoDB as a backend
 CELERY_RESULT_BACKEND = 'mongodb://localhost:27017/'
@@ -53,4 +54,5 @@ CELERY_ROUTES = {
     'YelpExtractor.get_business_info_urls': {'queue': 'data_extraction', 'routing_key': 'data_extraction'},
     'YelpExtractor.get_reviews_info': {'queue': 'data_extraction', 'routing_key': 'data_extraction'},
     'YelpExtractor.determine_review_pages': {'queue': 'data_extraction', 'routing_key': 'data_extraction'},
+    'FacebookExtractor.get_user_posts': {'queue': 'data_extraction', 'routing_key': 'data_extraction'},
 }

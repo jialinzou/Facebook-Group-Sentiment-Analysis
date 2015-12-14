@@ -8,7 +8,6 @@ from library.data_extraction.yelp_data_extractor.yelp_extractor_settings import 
 
 # tests_yelp_extractor.py contains tests for testing our yelp extractor
 
-
 class TestYelpExtractor(unittest.TestCase):
     #   Usage:
     #       Tests for the yelp extractor

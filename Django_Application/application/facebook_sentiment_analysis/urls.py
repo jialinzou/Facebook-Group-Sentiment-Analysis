@@ -6,5 +6,5 @@ from views.train import Train
 
 urlpatterns = [
     url(r'^$', Index.as_view(), name='index'),
-    url(r'train/^$', Train.as_view(), name='train'),
+    url(r'train', Train.as_view(), name='train'),
 ]

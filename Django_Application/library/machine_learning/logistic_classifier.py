@@ -76,9 +76,9 @@ class LogisticClassifier(object):
 
         # The sentiment model is our logistic classifier
         self.sentiment_model = graphlab.logistic_classifier.create(train_data,
-                                                              target='sentiment',
-                                                              features=['word_count'],
-                                                              validation_set=test_data)
+                                                                   target='sentiment',
+                                                                   features=['word_count'],
+                                                                   validation_set=test_data)
 
     def convert_facebook_model_to_sframe(self, facebook_model_iterator1):
         pass

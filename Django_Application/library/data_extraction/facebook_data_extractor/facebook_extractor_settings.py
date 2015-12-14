@@ -1,4 +1,4 @@
-# access_token for the facebook
-ACCESS_TOKEN = "933050970122722|f6d64ae438576ef20ef66b9690de607f"
+# facebook_extractor_settings.py contains access tokens required to access facebook graph API
 
-URL = "https://graph.facebook.com/%s/?fields=feed.limit(%s){from,message}&access_token=%s"
+# Access Token for Facebook Graph API
+access_token = "933050970122722|f6d64ae438576ef20ef66b9690de607f"
