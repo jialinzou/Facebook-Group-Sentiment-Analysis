@@ -1,4 +1,5 @@
 import graphlab
+import graphlab.aggregate
 
 class LogisticClassifier(object):
     # Usage:
@@ -13,7 +14,14 @@ class LogisticClassifier(object):
         # Return:
         #       None
 
-        self.sf = graphlab.SFrame({'id':[], 'review':[], 'star':[]})
+        # SFrame used for adding in model data (from yelp or amazon)
+        self.sf = None
+
+        # SFrame used for creating an sentiment model
+        self.sentiment_model = None
+
+        # SFrame for adding in facebook data
+        self.facebook = None
 
     def add_models(self, model_iterators, num_samples):
         # Usage:
@@ -34,18 +42,19 @@ class LogisticClassifier(object):
             # Get each model inside an iterator
             for model in iterator:
 
-                # Create a new sframe
-                sf_row = graphlab.SFrame({'id':model.id, 'review':model.review, 'star':model.star})
-
-                # Append the new row into sframe
-                self.sf.append(sf_row)
+                if not self.sf:
+                    # Create a new sframe
+                    self.sf = graphlab.SFrame(data={'id':[model.id], 'review':[model.review_text], 'star':[model.star]})
+                else:
+                    # Append the new row into sframe
+                    self.sf = self.sf.append(graphlab.SFrame(data={'id':[model.id], 'review':[model.review_text], 'star':[model.star]}))
 
                 # Stop if the number of samples required is appended into an sframe
-                if num_samples/len(model_iterators) >= self.sf.num_rows():
+                if self.sf.num_rows() >= num_samples/len(model_iterators):
                     break
 
             # Stop if the number of samples required is appended into an sframe
-            if num_samples/len(model_iterators) >= self.sf.num_rows():
+            if self.sf.num_rows() >= num_samples/len(model_iterators):
                 break
 
         # Return the number of models that is used
@@ -66,10 +75,10 @@ class LogisticClassifier(object):
         self.sf['word_count'] = graphlab.text_analytics.count_words(self.sf['review'])
 
         # Remove 3 star sentiments, since they are in the "middle"
-        self.sf = self.sf[self.sf['rating'] != 3]
+        self.sf = self.sf[self.sf['star'] != 3]
 
         # Positive sentiment =  4 or 5 star review
-        self.sf['sentiment'] = self.sf['rating'] >= 4
+        self.sf['sentiment'] = self.sf['star'] >= 4
 
         # Split the sframe into train data and test data
         train_data, test_data = self.sf.random_split(split, seed=seed)
@@ -80,5 +89,64 @@ class LogisticClassifier(object):
                                                                    features=['word_count'],
                                                                    validation_set=test_data)
 
-    def convert_facebook_model_to_sframe(self, facebook_model_iterator1):
-        pass
+    def add_facebook_model(self, facebook_group, facebook_user_model, facebook_post_model):
+        # Usage:
+        #       function to add facebook's user and their post data
+        # Arguments:
+        #       facebook_group      (string) : facebook group number or ID
+        #       facebook_user_model (model)  : facebook user model
+        #       facebook_post_model (model)  : facebook post model
+        # Return:
+        #       num_rows            (int)   : number of posts added to the sframe
+
+        # Find all users in the facebook group
+        for user in facebook_user_model.objects.filter(facebook_group=facebook_group).iterator():
+
+            # Find all the posts that the user owns
+            for post in facebook_post_model.objects.filter(facebook_user=user).iterator():
+
+                if not self.facebook:
+                    # Create a new sframe
+                    self.facebook = graphlab.SFrame(data={'user_id':[user.id], 'username':[user.username], 'review':[post.post]})
+                else:
+                    # Append to our facebook sframe
+                    self.facebook = self.facebook.append(graphlab.SFrame(data={'user_id':[user.id], 'username':[user.username], 'review':[post.post]}))
+
+        # Create a wordcount of the facebook sframe
+        self.facebook['word_count'] = graphlab.text_analytics.count_words(self.facebook['review'])
+
+    def predict_sentiment(self):
+        # Usage:
+        #       function to predict the sentiment on each facebook user's post
+        # Arguments:
+        #       None
+        # Return:
+        #       None
+
+        # Predict the sentiment using the model
+        self.facebook['predicted_sentiment'] = self.sentiment_model.predict(self.facebook, output_type='probability')
+
+    def average_user_sentiment(self):
+        # Usage:
+        #       function to average out each user's sentiment
+        # Arguments:
+        #       None
+        # Return:
+        #       None
+
+        # Use groupby and aggregation
+        self.facebook = self.facebook.groupby(key_columns=['user_id', 'username'],
+                                              operations={
+                                                  'mean_predicted_sentiment':graphlab.aggregate.MEAN('predicted_sentiment')
+                                              })
+
+    def get_sentiment(self):
+        # Usage:
+        #       getter to return sentiment analysis results
+        # Arguments:
+        #       None
+        # Return:
+        #       facebook (sframe) : the facebook sframe that contains sentiment results
+
+        return self.facebook
+
