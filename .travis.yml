@@ -1,0 +1,30 @@
+language: python
+
+branches:
+  only:
+  - master
+
+sudo: required
+
+services:
+- docker
+
+notifications:
+  webhooks:
+    urls:
+    - https://api.opsgenie.com/v1/json/travisci?apiKey=5a20d401-9c4b-4083-b22d-afeb70aad486
+    on_success: always
+    on_failure: always
+    on_start: never
+  slack:
+    secure: XcMA8Dyfh8tyGEyARLftL2dEEeQVgbVu4diTzfhkmYT8b8K8VHGO6arY6Dzo2Hz60KTiZtslivO3JaScGQx8GgAMeWEGixDzTNgtwPn44c5+E8pMJnd84oJLUcAZSsrKoqQGsKJuxE0nBiQE9vZt2lKD+cRg089bN7FU5zfVNGEv9dEmiRPVPrSda8puFI1plfiwnZol8VsGIeHDf0uXHRXkvTYzbD9fJMaMkd9obuzu/ni1J6Cr0+6KIeUVZjfi7n2UHFzT4nfk1MdqWSC5smOfPced2WKzHlF8TKZ+XfqvgaPFg4hHCcIcNH6M2TU8oKasB3sI670afOcCSn+Sx04G6DBL4jqwnvjlUZPZWS7jV2/AJU4BGeWtawbPtVdfFa2Z1cHRCzTMyQM9V+YFq3AgVD/+qM0KChQThPnyw61onwW63TpJzepPgjKjJylyezcCZVbUBY/bjKDhp7dvrhIP5K2RC2Ev6bB6amKnCyvkVL3CR+BK9FcMQJYhOsM/SUZ0X0Kr3LUkGpZg6lnycGXPM3xRyo4LikH8NkeKaqAaFzIY2YunNLgKAUuyk4hZ2mydynBT/ymNK0yVGrPkEpRKAfFuTIJx6DyBSKs9Lqvgr19WYfjyBPLGddfMQfvY5j3GI+9/xg3LU+zvJWVR9ilfUSsi6rZc8Ww6XoavH7I=
+
+before_install:
+- docker build --file="Docker/Dockerfiles/Dockerfile" -t mxlei01/facebook-group-sentiment-analysis .
+
+script: 
+  - docker run -it mxlei01/facebook-group-sentiment-analysis /bin/sh -c "su - postgres -c '/usr/lib/postgresql/9.4/bin/postgres -D /var/lib/postgresql/9.4/main -c config_file=/etc/postgresql/9.4/main/postgresql.conf &' && mongod & && rabbitmq-server & && sleep 60 && cd /application/Django-Application && coverage run --omit=/usr/local/lib/*,unit_tests/run_all_tests.py --source=. -m unit_tests.run_all_tests && COVERALLS_REPO_TOKEN=$COVERALLS_REPO_TOKEN TRAVIS_BRANCH=$TRAVIS_BRANCH BRANCH=$TRAVIS_BRANCH coveralls"
+
+after_success:
+- docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+- docker push mxlei01/facebook-group-sentiment-analysis

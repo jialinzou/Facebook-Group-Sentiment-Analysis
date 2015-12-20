@@ -3,3 +3,4 @@ celery
 us
 requests
 oauth2
+gunicorn
