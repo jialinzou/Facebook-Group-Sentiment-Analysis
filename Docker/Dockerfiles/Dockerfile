@@ -189,7 +189,7 @@ EXPOSE 5672
 #===========================End Install RabbitMQ===============================
 
 #===========================Run Supervisord====================================
-COPY Supervisord/services_only.conf /etc/supervisor/conf.d/supervisord.conf
+COPY Supervisord/services.conf /etc/supervisor/conf.d/supervisord.conf
 RUN mkdir /var/supervisord
 CMD /usr/bin/supervisord
 #===========================Run Supervisord====================================
