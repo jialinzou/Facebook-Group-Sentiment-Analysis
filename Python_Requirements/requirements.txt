@@ -1,8 +1,7 @@
-tornado
+coveralls
+django
 celery
 us
 requests
 oauth2
 gunicorn
-coveralls
-django
