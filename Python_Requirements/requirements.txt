@@ -5,3 +5,4 @@ requests
 oauth2
 gunicorn
 coveralls
+django
