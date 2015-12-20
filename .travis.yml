@@ -4,6 +4,8 @@ branches:
   only:
   - master
 
+install: travis_wait mvn install
+
 sudo: required
 
 services:
