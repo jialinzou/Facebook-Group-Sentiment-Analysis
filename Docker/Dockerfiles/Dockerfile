@@ -9,6 +9,7 @@ RUN apt-get -y upgrade
 RUN apt-get -y install build-essential
 RUN apt-get -y install python-dev
 RUN apt-get -y install libpq-dev
+RUN apt-get -y istalll python-pip
 #===========================End Update Ubuntu==================================
 
 #===========================Installing Graphlab=====================
