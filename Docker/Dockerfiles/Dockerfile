@@ -16,14 +16,13 @@ RUN apt-get purge python-pip
 RUN apt-get -y install curl
 RUN curl --silent --show-error --retry 5 https://bootstrap.pypa.io/get-pip.py | python2.7
 RUN pip install --upgrade --no-cache-dir https://get.dato.com/GraphLab-Create/1.7.1/webdashboardhp@gmail.com/FB97-6AE4-0951-1515-7B22-3C13-9B43-83A6/GraphLab-Create-License.tar.gz
-ENV GRAPHLAB_PRODUCT_KEY=FB97-6AE4-0951-15B22-3C13-9B43-83A6
-RUN export GRAPHLAB_PRODUCT_KEY=FB97-6AE4-0951-15B22-3C13-9B43-83A6
+RUN locale-gen "en_US.UTF-8"
 #===========================End  Python Requirements=====================
 
 #=====Create a folder, and copy our application into the application folder====
 RUN mkdir /application
 COPY Django_Application /application/Django_Application
-COPY Build_Scripts /application/Docker/Build_Scripts
+COPY Docker/Build_Scripts /application/Build_Scripts
 EXPOSE 8000
 #=====Create a folder, and copy our application into the application folder====
 
