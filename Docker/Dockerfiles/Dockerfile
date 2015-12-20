@@ -12,8 +12,9 @@ RUN apt-get -y install libpq-dev
 #===========================End Update Ubuntu==================================
 
 #===========================Installing Graphlab=====================
+RUN apt-get purge python-pip
 RUN apt-get -y install curl
-RUN curl https://raw.github.com/pypa/pip/master/contrib/get-pip.py | python
+RUN curl --silent --show-error --retry 5 https://bootstrap.pypa.io/get-pip.py | python2.7
 RUN pip install --upgrade --no-cache-dir https://get.dato.com/GraphLab-Create/1.7.1/webdashboardhp@gmail.com/FB97-6AE4-0951-1515-7B22-3C13-9B43-83A6/GraphLab-Create-License.tar.gz
 ENV GRAPHLAB_PRODUCT_KEY=FB97-6AE4-0951-15B22-3C13-9B43-83A6
 #===========================End  Python Requirements=====================
