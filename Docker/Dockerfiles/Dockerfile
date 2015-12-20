@@ -21,7 +21,7 @@ ENV GRAPHLAB_PRODUCT_KEY=FB97-6AE4-0951-15B22-3C13-9B43-83A6
 
 #=====Create a folder, and copy our application into the application folder====
 RUN mkdir /application
-COPY Django-Application /application/Django-Application
+COPY Django-Application /application/Django_Application
 EXPOSE 8000
 #=====Create a folder, and copy our application into the application folder====
 
