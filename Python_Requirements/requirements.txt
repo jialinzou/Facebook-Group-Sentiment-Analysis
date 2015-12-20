@@ -6,3 +6,4 @@ requests
 oauth2
 gunicorn
 beautifulsoup4
+psycopg2
