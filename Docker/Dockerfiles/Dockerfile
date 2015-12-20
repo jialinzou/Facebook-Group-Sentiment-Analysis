@@ -18,7 +18,6 @@ ENV GRAPHLAB_PRODUCT_KEY=FB97-6AE4-0951-15B22-3C13-9B43-83A6
 #===========================End  Python Requirements=====================
 
 #===========================Installing Python Requirements=====================
-RUN apt-get install -y python-pip
 RUN pip install -r /application/Django-Application/requirements.txt
 RUN pip install --upgrade tornado
 #===========================Installing Python Requirements=====================
