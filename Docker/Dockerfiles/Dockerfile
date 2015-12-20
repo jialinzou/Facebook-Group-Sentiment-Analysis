@@ -29,7 +29,6 @@ EXPOSE 8000
 COPY Python_Requirements /application/Python_Requirements
 RUN pip install -r /application/Python_Requirements/requirements.txt
 RUN pip install --upgrade tornado
-RUN pip install coveralls
 #===========================Installing Python Requirements=====================
 
 #===========================Installing Supervisord=============================
