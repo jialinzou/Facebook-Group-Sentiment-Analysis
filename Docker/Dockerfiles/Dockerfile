@@ -78,10 +78,10 @@ EXPOSE 5432
 # Add VOLUMEs to allow backup of config, logs and databases
 VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
 
-RUN    su - postgres -c '/etc/init.d/postgresql start' && cd /application/Django_Application/ && python manage.py makemigrations facebook_sentiment_analysis && python manage.py migrate && cd 
-
 # Change back to root
 USER root
+
+RUN    su - postgres -c '/etc/init.d/postgresql start' && cd /application/Django_Application/ && python manage.py makemigrations facebook_sentiment_analysis && python manage.py migrate && cd 
 #===========================End Install Postgres===============================
 
 #===========================Start Install MongoDB==============================
