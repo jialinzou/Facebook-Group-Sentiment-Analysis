@@ -24,7 +24,6 @@ RUN dpkg-reconfigure locales
 RUN mkdir /application
 COPY Django_Application /application/Django_Application
 COPY Docker/Build_Scripts /application/Build_Scripts
-RUN chmod -R 777 /application/
 EXPOSE 8000
 #=====Create a folder, and copy our application into the application folder====
 
@@ -79,7 +78,7 @@ EXPOSE 5432
 # Add VOLUMEs to allow backup of config, logs and databases
 VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
 
-RUN    /etc/init.d/postgresql start && cd /application/Django_Application/ && python manage.py makemigrations facebook_sentiment_analysis && python manage.py migrate && cd 
+RUN    su - postgres -c '/etc/init.d/postgresql start' && cd /application/Django_Application/ && python manage.py makemigrations facebook_sentiment_analysis && python manage.py migrate && cd 
 
 # Change back to root
 USER root
