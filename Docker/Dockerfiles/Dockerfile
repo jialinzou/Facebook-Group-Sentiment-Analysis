@@ -65,8 +65,6 @@ RUN    /etc/init.d/postgresql start &&\
     psql --command "CREATE USER docker WITH SUPERUSER PASSWORD 'docker';" &&\
     createdb -O docker facebook_db
 
-RUN    /etc/init.d/postgresql start && cd /application/Django_Application/ && python manage.py migrate && cd 
-
 # Adjust PostgreSQL configuration so that remote connections to the
 # database are possible.
 RUN echo "host all  all    0.0.0.0/0  md5" >> /etc/postgresql/9.4/main/pg_hba.conf
@@ -80,9 +78,15 @@ EXPOSE 5432
 # Add VOLUMEs to allow backup of config, logs and databases
 VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
 
+RUN    /etc/init.d/postgresql start
+
 # Change back to root
 USER root
 #===========================End Install Postgres===============================
+
+#===========================Start Django Migrate===============================
+RUN cd /application/Django_Application/ && python manage.py migrate && cd 
+#===========================End Django Migrate=================================
 
 #===========================Start Install MongoDB==============================
 # add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
