@@ -78,15 +78,11 @@ EXPOSE 5432
 # Add VOLUMEs to allow backup of config, logs and databases
 VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
 
-RUN    /etc/init.d/postgresql start
+RUN    /etc/init.d/postgresql start && cd /application/Django_Application/ && python makemigrations application.facebook_sentiment_analysis && python manage.py migrate && cd 
 
 # Change back to root
 USER root
 #===========================End Install Postgres===============================
-
-#===========================Start Django Migrate===============================
-RUN cd /application/Django_Application/ && python makemigrations application.facebook_sentiment_analysis && python manage.py migrate && cd 
-#===========================End Django Migrate=================================
 
 #===========================Start Install MongoDB==============================
 # add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
