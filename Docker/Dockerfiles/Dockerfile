@@ -85,7 +85,7 @@ USER root
 #===========================End Install Postgres===============================
 
 #===========================Start Django Migrate===============================
-RUN cd /application/Django_Application/ && python manage.py migrate && cd 
+RUN cd /application/Django_Application/ && python makemigrations application.facebook_sentiment_analysis && python manage.py migrate && cd 
 #===========================End Django Migrate=================================
 
 #===========================Start Install MongoDB==============================
