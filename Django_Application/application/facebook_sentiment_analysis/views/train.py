@@ -106,8 +106,9 @@ class Train(View):
         # Loop through the messages using the facebook_extractor
         for data in self.facebook_extractor.distribute_get_posts(group=facebook_group):
             # Get or create a facebook user, since that user might exist in other public groups as well
-            facebook_user, facebook_user_created = FacebookUser.objects.get_or_create(id=data["user_id"], username=data["user_name"],
-                                                                                      facebook_group=facebook_group_model)
+            facebook_user, facebook_user_created = FacebookUser.objects.get_or_create(id=data["user_id"],
+                                                                                      defaults=dict(username=data["user_name"],
+                                                                                                    facebook_group=facebook_group_model))
 
             # Update or create the user's messages
             FacebookPost.objects.update_or_create(id=data["message_id"], post=data["message_text"],
