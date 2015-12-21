@@ -20,8 +20,8 @@ class TestViewTrain(TestCase):
         model_array = [
             "./unit_tests/serialized_test_data/yelp/review.json",
             "./unit_tests/serialized_test_data/facebook/group.json",
-            "./unit_tests/serialized_test_data/facebook/post.json",
-            "./unit_tests/serialized_test_data/facebook/user.json"
+            "./unit_tests/serialized_test_data/facebook/user.json",
+            "./unit_tests/serialized_test_data/facebook/post.json"
         ]
 
         # Loop through model file locations
