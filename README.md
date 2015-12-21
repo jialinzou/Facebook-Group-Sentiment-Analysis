@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/mxlei01/Facebook-Group-Sentiment-Analysis.svg?branch=master)](https://travis-ci.org/mxlei01/Facebook-Group-Sentiment-Analysis)
 <a href="https://landscape.io/github/mxlei01/Facebook-Group-Sentiment-Analysis/master">
   <img alt="Code Health" src="https://landscape.io/github/mxlei01/Facebook-Group-Sentiment-Analysis/master/landscape.svg?style=flat"/>
 </a>
