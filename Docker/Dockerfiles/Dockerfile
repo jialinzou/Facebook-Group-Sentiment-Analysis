@@ -65,7 +65,7 @@ RUN    /etc/init.d/postgresql start &&\
     psql --command "CREATE USER docker WITH SUPERUSER PASSWORD 'docker';" &&\
     createdb -O docker facebook_db
 
-RUN    /etc/init.d/postgresql start && python /application/Django_Application/manage.py migrate
+RUN    /etc/init.d/postgresql start && cd /application/Django_Application/ && python Django_Application/manage.py migrate && cd 
 
 # Adjust PostgreSQL configuration so that remote connections to the
 # database are possible.
