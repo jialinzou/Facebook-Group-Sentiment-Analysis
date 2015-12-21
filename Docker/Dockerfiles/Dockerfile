@@ -80,6 +80,8 @@ VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
 
 # Change back to root
 USER root
+
+RUN    su - postgres -c '/etc/init.d/postgresql start' && cd /application/Django_Application/ && python manage.py makemigrations facebook_sentiment_analysis && python manage.py migrate && cd 
 #===========================End Install Postgres===============================
 
 #===========================Start Install MongoDB==============================
