@@ -24,6 +24,8 @@ RUN dpkg-reconfigure locales
 RUN mkdir /application
 COPY Django_Application /application/Django_Application
 COPY Docker/Build_Scripts /application/Build_Scripts
+RUN apt-get install -y git
+COPY .git /application
 EXPOSE 8000
 #=====Create a folder, and copy our application into the application folder====
 
@@ -31,7 +33,6 @@ EXPOSE 8000
 COPY Python_Requirements /application/Python_Requirements
 RUN pip install -r /application/Python_Requirements/requirements.txt
 RUN pip install --upgrade tornado
-RUN pip install --upgrade coveralls
 #===========================Installing Python Requirements=====================
 
 #===========================Installing Supervisord=============================
