@@ -3,13 +3,15 @@ omit =
 	/usr/local/lib/*
 	unit_tests/run_all_tests.py
 	application/facebook_sentiment_analysis/migrations/*
-	application/facebook_sentiment_analysis/manage.py
-	application/facebook_sentiment_analysis/urls.py 
-	application/facebook_sentiment_analysis/wsgi.py
+	manage.py
+	urls.py
+	wsgi.py
+	application/facebook_sentiment_analysis/urls.py
 	library/logger/logger.py
-	workload_distribution/celery_startup_scripts/celery_main.py 
-	library/executor_thread_pool/shared_executor_settings.py 
-	library/custom_exceptions/data_extraction_error.py 
+	workload_distribution/celery_startup_scripts/celery_main.py
+	library/executor_thread_pool/shared_executor_settings.py
+	library/custom_exceptions/data_extraction_error.py
+	library/executor_thread_pool/shared_executor.py
 
 source =
 	.
