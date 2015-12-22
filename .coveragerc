@@ -1,0 +1,15 @@
+[run]
+omit = 
+	/usr/local/lib/*
+	unit_tests/run_all_tests.py
+	application/facebook_sentiment_analysis/migrations/*
+	manage.py
+	urls.py
+	wsgi.py
+	library/logger/logger.py
+	workload_distribution/celery_startup_scripts/celery_main.py 
+
+source =
+	.
+
+ignore_errors = True
