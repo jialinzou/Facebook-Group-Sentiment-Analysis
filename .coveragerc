@@ -12,4 +12,5 @@ omit =
 source =
 	.
 
+[report]
 ignore_errors = True
