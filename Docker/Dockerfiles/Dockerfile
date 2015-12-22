@@ -25,7 +25,7 @@ RUN mkdir /application
 COPY Django_Application /application/Django_Application
 COPY Docker/Build_Scripts /application/Build_Scripts
 RUN apt-get install -y git
-COPY .git /application/Django_Application
+COPY .git /application
 EXPOSE 8000
 #=====Create a folder, and copy our application into the application folder====
 
