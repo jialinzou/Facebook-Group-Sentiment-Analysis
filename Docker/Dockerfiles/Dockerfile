@@ -52,7 +52,7 @@ RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main" > /etc
 # Install ``python-software-properties``, ``software-properties-common`` and PostgreSQL 9.4
 #  There are some warnings (in red) that show up during the build. You can hide
 #  them by prefixing each apt-get statement with DEBIAN_FRONTEND=noninteractive
-RUN apt-get update && apt-get install -y python-software-properties software-properties-common postgresql-9.4 postgresql-client-9.4 postgresql-contrib-9.4
+RUN apt-get update && apt-get install -y python-software-properties software-properties-common postgresql-9.5 postgresql-client-9.5 postgresql-contrib-9.5
 
 # Note: The official Debian and Ubuntu images automatically ``apt-get clean``
 # after each ``apt-get``
@@ -70,13 +70,13 @@ RUN    /etc/init.d/postgresql start &&\
 
 # Adjust PostgreSQL configuration so that remote connections to the
 # database are possible.
-RUN echo "host all  all    0.0.0.0/0  md5" >> /etc/postgresql/9.4/main/pg_hba.conf
+RUN echo "host all  all    0.0.0.0/0  md5" >> /etc/postgresql/9.5/main/pg_hba.conf
 
 # Change port to 3300
-RUN echo "port=3300" >> /etc/postgresql/9.4/main/postgresql.conf
+RUN echo "port=3300" >> /etc/postgresql/9.5/main/postgresql.conf
 
-# And add ``listen_addresses`` to ``/etc/postgresql/9.4/main/postgresql.conf``
-RUN echo "listen_addresses='*'" >> /etc/postgresql/9.4/main/postgresql.conf
+# And add ``listen_addresses`` to ``/etc/postgresql/9.5/main/postgresql.conf``
+RUN echo "listen_addresses='*'" >> /etc/postgresql/9.5/main/postgresql.conf
 
 # Expose the PostgreSQL port
 EXPOSE 3300
@@ -127,8 +127,8 @@ RUN set -ex \
 		apt-key adv --keyserver ha.pool.sks-keyservers.net --recv-keys "$key"; \
 	done
 
-ENV MONGO_MAJOR testing
-ENV MONGO_VERSION 3.2.0~rc4
+ENV MONGO_MAJOR 3.2 
+ENV MONGO_VERSION 3.2.0 
 
 RUN echo "deb http://repo.mongodb.org/apt/debian wheezy/mongodb-org/$MONGO_MAJOR main" > /etc/apt/sources.list.d/mongodb-org.list
 
@@ -144,10 +144,13 @@ RUN set -x \
 	&& rm -rf /var/lib/mongodb \
 	&& mv /etc/mongod.conf /etc/mongod.conf.orig
 
+# Change port to 26017
+RUN echo "net: \\n \
+   bindIp: 127.0.0.1 \\n \
+   port: 26017" >> /etc/mongod.conf
+
 RUN mkdir -p /data/db && chown -R mongodb:mongodb /data/db
 VOLUME /data/db
-# Expose MongoDB Port
-EXPOSE 27017
 #===========================End Install MongoDB================================
 
 #===========================Installing RabbitMQ================================
