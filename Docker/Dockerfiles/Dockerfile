@@ -72,6 +72,9 @@ RUN    /etc/init.d/postgresql start &&\
 # database are possible.
 RUN echo "host all  all    0.0.0.0/0  md5" >> /etc/postgresql/9.4/main/pg_hba.conf
 
+# Change port to 3300
+RUN echo "port=3300" >> /etc/postgresql/9.4/main/postgresql.conf
+
 # And add ``listen_addresses`` to ``/etc/postgresql/9.4/main/postgresql.conf``
 RUN echo "listen_addresses='*'" >> /etc/postgresql/9.4/main/postgresql.conf
 
