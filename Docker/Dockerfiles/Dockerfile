@@ -72,8 +72,14 @@ RUN    /etc/init.d/postgresql start &&\
 # database are possible.
 RUN echo "host all  all    0.0.0.0/0  md5" >> /etc/postgresql/9.4/main/pg_hba.conf
 
+# Change port to 3300
+RUN echo "port=3300" >> /etc/postgresql/9.4/main/postgresql.conf
+
 # And add ``listen_addresses`` to ``/etc/postgresql/9.4/main/postgresql.conf``
 RUN echo "listen_addresses='*'" >> /etc/postgresql/9.4/main/postgresql.conf
+
+# Expose the PostgreSQL port
+EXPOSE 3300
 
 # Add VOLUMEs to allow backup of config, logs and databases
 VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
@@ -140,6 +146,8 @@ RUN set -x \
 
 RUN mkdir -p /data/db && chown -R mongodb:mongodb /data/db
 VOLUME /data/db
+# Expose MongoDB Port
+EXPOSE 27017
 #===========================End Install MongoDB================================
 
 #===========================Installing RabbitMQ================================
