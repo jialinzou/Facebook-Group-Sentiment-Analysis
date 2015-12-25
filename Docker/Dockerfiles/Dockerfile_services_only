@@ -61,6 +61,10 @@ VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
 
 # Change back to root
 USER root
+
+# Wierd issue with ssl key
+RUN cd /var/lib/postgresql/9.4/main && cp /etc/ssl/certs/ssl-cert-snakeoil.pem server.crt && cp /etc/ssl/private/ssl-cert-snakeoil.key server.key && chown postgres * && chmod 640 server.crt server.key && cd
+
 #===========================End Install Postgres===============================
 
 #===========================Start Install MongoDB==============================
