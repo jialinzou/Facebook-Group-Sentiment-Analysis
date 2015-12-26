@@ -85,7 +85,8 @@ VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
 USER root
 
 # Wierd issue with ssl key
-RUN cd /var/lib/postgresql/9.4/main && cp /etc/ssl/certs/ssl-cert-snakeoil.pem server.crt && cp /etc/ssl/private/ssl-cert-snakeoil.key server.key && chown postgres * && chmod 640 server.crt server.key && cd
+RUN cp /etc/ssl/private/ssl-cert-snakeoil.key /etc/ssl/certs/ssl-cert-snakeoil.key
+RUN echo "ssl_key_file = '/etc/ssl/certs/ssl-cert-snakeoil.key'" >> /etc/postgresql/9.4/main/postgresql.conf
 
 # Start postgres to run migrations
 RUN    su - postgres -c '/etc/init.d/postgresql start' && cd /application/Django_Application/ && python manage.py makemigrations facebook_sentiment_analysis && python manage.py migrate && cd 
