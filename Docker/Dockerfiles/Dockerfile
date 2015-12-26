@@ -79,7 +79,7 @@ RUN echo "port=3300" >> /etc/postgresql/9.4/main/postgresql.conf
 RUN echo "listen_addresses='*'" >> /etc/postgresql/9.4/main/postgresql.conf
 
 # Wierd Issue with SSL Key
-RUN echo "ssl_key_file = '/etc/ssl/certs/ssl-cert-snakeoil.key'" >> /etc/postgresql/9.4/main/postgresql.conf
+RUN echo "ssl_key_file = '/ssl-cert-snakeoil.key'" >> /etc/postgresql/9.4/main/postgresql.conf
 
 # Add VOLUMEs to allow backup of config, logs and databases
 VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
