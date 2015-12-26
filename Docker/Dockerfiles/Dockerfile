@@ -78,6 +78,9 @@ RUN echo "port=3300" >> /etc/postgresql/9.4/main/postgresql.conf
 # And add ``listen_addresses`` to ``/etc/postgresql/9.4/main/postgresql.conf``
 RUN echo "listen_addresses='*'" >> /etc/postgresql/9.4/main/postgresql.conf
 
+# Wierd Issue with SSL Key
+RUN echo "ssl_key_file = '/etc/ssl/certs/ssl-cert-snakeoil.key'" >> /etc/postgresql/9.4/main/postgresql.conf
+
 # Add VOLUMEs to allow backup of config, logs and databases
 VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
 
@@ -85,8 +88,10 @@ VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
 USER root
 
 # Wierd issue with ssl key
-RUN cp /etc/ssl/private/ssl-cert-snakeoil.key /etc/ssl/certs/ssl-cert-snakeoil.key
-RUN echo "ssl_key_file = '/etc/ssl/certs/ssl-cert-snakeoil.key'" >> /etc/postgresql/9.4/main/postgresql.conf
+RUN cp /etc/ssl/private/ssl-cert-snakeoil.key /ssl-cert-snakeoil.key
+RUN chmod 777 /
+RUN chmod 640 /ssl-cert-snakeoil.key
+RUN chown postgres:postgres /ssl-cert-snakeoil.key
 
 # Start postgres to run migrations
 RUN    su - postgres -c '/etc/init.d/postgresql start' && cd /application/Django_Application/ && python manage.py makemigrations facebook_sentiment_analysis && python manage.py migrate && cd 

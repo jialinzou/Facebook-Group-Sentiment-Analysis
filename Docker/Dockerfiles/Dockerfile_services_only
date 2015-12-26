@@ -53,6 +53,9 @@ RUN echo "port=3300" >> /etc/postgresql/9.4/main/postgresql.conf
 # And add ``listen_addresses`` to ``/etc/postgresql/9.4/main/postgresql.conf``
 RUN echo "listen_addresses='*'" >> /etc/postgresql/9.4/main/postgresql.conf
 
+# Wierd Issue with SSL Key
+RUN echo "ssl_key_file = '/ssl-cert-snakeoil.key'" >> /etc/postgresql/9.4/main/postgresql.conf
+
 # Expose the PostgreSQL port
 EXPOSE 3300
 
@@ -63,8 +66,10 @@ VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
 USER root
 
 # Wierd issue with ssl key
-RUN cp /etc/ssl/private/ssl-cert-snakeoil.key /etc/ssl/certs/ssl-cert-snakeoil.key
-RUN echo "ssl_key_file = '/etc/ssl/certs/ssl-cert-snakeoil.key'" >> /etc/postgresql/9.4/main/postgresql.conf
+RUN cp /etc/ssl/private/ssl-cert-snakeoil.key /ssl-cert-snakeoil.key
+RUN chmod 777 /
+RUN chmod 640 /ssl-cert-snakeoil.key
+RUN chown postgres:postgres /ssl-cert-snakeoil.key
 #===========================End Install Postgres===============================
 
 #===========================Start Install MongoDB==============================
