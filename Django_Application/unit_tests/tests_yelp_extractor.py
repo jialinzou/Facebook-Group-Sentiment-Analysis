@@ -245,6 +245,20 @@ class TestYelpExtractor(unittest.TestCase):
             # Should have no exceptions
             self.assertFalse(isinstance(result["exception"], DataExtractionError))
 
+            # Results should not be None
+            self.assertNotEqual(result["data"], None)
+
+            # Assert that review should be a string
+            self.assertIn("unicode", str(type(result["data"]["review"])))
+
+            # Assert that ID should be string
+            self.assertIn("unicode", str(type(result["data"]["id"])))
+
+            # Assert that start should be a float
+            self.assertIn("float", str(type(result["data"]["star"])))
+
+            print result["data"]
+
         # Assert that we have 10 items
         self.assertTrue(len(results_store) == results_required)
 
