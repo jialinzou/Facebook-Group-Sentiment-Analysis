@@ -257,8 +257,6 @@ class TestYelpExtractor(unittest.TestCase):
             # Assert that start should be a float
             self.assertIn("float", str(type(result["data"]["star"])))
 
-            print result["data"]
-
         # Assert that we have 10 items
         self.assertTrue(len(results_store) == results_required)
 
