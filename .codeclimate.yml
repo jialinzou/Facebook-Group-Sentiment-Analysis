@@ -18,4 +18,4 @@ engines:
     
 ratings:
   paths:
-    - Tornado-Application/**
+    - Django_Application/**
