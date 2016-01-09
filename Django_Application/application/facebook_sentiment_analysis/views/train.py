@@ -62,12 +62,18 @@ class Train(View):
         # get our yelp reviews appended into a database, and we can get some message, and count
         yelp_message, yelp_count = self.get_yelp_reviews(num_samples=math.ceil(num_samples/2))
 
-        # train, and get our data for user's sentiment
-        user_sentiment = self.compute_sentiment_analysis(model_iterators=[YelpReview.objects.all().iterator()],
-                                                         num_samples=num_samples,
-                                                         facebook_group=facebook_group,
-                                                         facebook_user_model=FacebookUser,
-                                                         facebook_post_model=FacebookPost)
+        # set user_sentiment to None
+        user_sentiment = None
+
+        # Need to test whether if we got any yelp data
+        if YelpReview.objects.count() > 0:
+
+            # train, and get our data for user's sentiment
+            user_sentiment = self.compute_sentiment_analysis(model_iterators=[YelpReview.objects.all().iterator()],
+                                                             num_samples=num_samples,
+                                                             facebook_group=facebook_group,
+                                                             facebook_user_model=FacebookUser,
+                                                             facebook_post_model=FacebookPost)
 
         # Return a JsonResponse to update to the front-end that the status is success
         return JsonResponse({'status':'Success', 'yelp_message':yelp_message, 'yelp_count':yelp_count,
