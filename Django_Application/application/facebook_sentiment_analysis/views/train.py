@@ -66,7 +66,7 @@ class Train(View):
         user_sentiment = None
 
         # set status to success, and message to None
-        status = "success"
+        status = "Success"
         message = None
 
         # Need to test whether if we got any yelp data
