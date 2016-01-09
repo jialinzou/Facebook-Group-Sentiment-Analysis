@@ -310,8 +310,6 @@ class YelpExtractor(object):
                 api_exhaust = True
 
             except Exception as e:
-                print str(e)
-
                 # Yield our data with our exception we had an unknown error
                 yield dict(data=None, exception=DataExtractionError(message=str("Unknown Error"), errors=str(e)))
 

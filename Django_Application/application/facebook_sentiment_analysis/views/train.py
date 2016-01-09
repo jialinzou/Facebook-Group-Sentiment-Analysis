@@ -86,7 +86,7 @@ class Train(View):
             message = "There are no reviews"
 
         # Return a JsonResponse to update to the front-end that the status is success
-        return JsonResponse({'status':status, 'message':message, 'yelp_message':yelp_message, 'yelp_count':yelp_count,
+        return JsonResponse({'status':status, 'message':message, 'message':yelp_message, 'yelp_count':yelp_count,
                              'facebook_message':facebook_message, 'facebook_count':facebook_count,
                              'user_sentiment':user_sentiment})
 
@@ -174,7 +174,7 @@ class Train(View):
                 if review["exception"]:
 
                     # Return the exception message, and how many count was added
-                    return review["exception"].message, abs(YelpReview.objects.count()-yelp_reviews_before)
+                    return review["exception"], abs(YelpReview.objects.count()-yelp_reviews_before)
 
                 # Add a new YelpReview into the database
                 YelpReview(id=review["data"]["id"], review_text=review["data"]["review"], star=review["data"]["star"]).save()
