@@ -65,6 +65,10 @@ class Train(View):
         # set user_sentiment to None
         user_sentiment = None
 
+        # set status to success, and message to None
+        status = "success"
+        message = None
+
         # Need to test whether if we got any yelp data
         if YelpReview.objects.count() > 0:
 
@@ -75,8 +79,14 @@ class Train(View):
                                                              facebook_user_model=FacebookUser,
                                                              facebook_post_model=FacebookPost)
 
+        else:
+
+            # There is no reviews, hence we will set a message
+            status = "Failure"
+            message = "There are no reviews"
+
         # Return a JsonResponse to update to the front-end that the status is success
-        return JsonResponse({'status':'Success', 'yelp_message':yelp_message, 'yelp_count':yelp_count,
+        return JsonResponse({'status':status, 'message':message, 'yelp_message':yelp_message, 'yelp_count':yelp_count,
                              'facebook_message':facebook_message, 'facebook_count':facebook_count,
                              'user_sentiment':user_sentiment})
 
