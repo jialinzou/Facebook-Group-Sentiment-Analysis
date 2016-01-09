@@ -19,13 +19,24 @@ class Train(View):
     #   We will get the group data such as members from the facebook group name, and train the
     #   logistic regression model with num_samples of data from amazon, and yelp (each half of num_samples)
 
-    # Variables:
-    #   yelp_extractor      (YelpExtractor)      : a yelp data extractor that can extract yelp data
-    #   facebook_extractor  (FacebookExtractor)  : a facebook extractor that can extract facebook data
-    #   logistic_classifier (LogisticRegression) : a logistic regression class that can compute sentiment of a user
-    yelp_extractor = YelpExtractor()
-    facebook_extractor = FacebookExtractor()
-    logistic_classifier = LogisticClassifier()
+    def setup_libraries(self):
+        # Usage:
+        #       The request object is an HTTPResponse object in Django. It is able to be used
+        #       like an dictionary to get http parameters, such as ?num_samples=X&facebook_Group=Y.
+        #       We will try to get num_samples, facebook_group, and pusher_uuid. Otherwise
+        #       we will raise a SuspiciousOperation if it fails. Afterwards get data from the facebook
+        #       group, and then train our model, then use our model to determine sentiment of users.
+        # Arguments:
+        #       yelp_extractor      (YelpExtractor)      : a yelp data extractor that can extract yelp data
+        #       facebook_extractor  (FacebookExtractor)  : a facebook extractor that can extract facebook data
+        #       logistic_classifier (LogisticRegression) : a logistic regression class that can compute sentiment of a user
+        # Return:
+        #       None
+
+        # Setup our Libraries
+        self.yelp_extractor = YelpExtractor()
+        self.facebook_extractor = FacebookExtractor()
+        self.logistic_classifier = LogisticClassifier()
 
     def get(self, request):
         # Usage:
@@ -38,6 +49,9 @@ class Train(View):
         #       request (object) : django request object
         # Return:
         #       Json (JsonResponse) : a Json object with status = done
+
+        # Setup our libraries first
+        self.setup_libraries()
 
         # get our url parameters
         num_samples, facebook_group = self.get_url_parameters(request)
@@ -101,7 +115,8 @@ class Train(View):
         #       count          (int)    : Number of users extracted from yelp
 
         # First, get or create a facebook_group
-        facebook_group_model, facebook_group_model_created = FacebookGroup.objects.get_or_create(id=facebook_group)
+        facebook_group_model, facebook_group_model_created = FacebookGroup.objects.get_or_create(id=facebook_group,
+                                                                                                 defaults=dict())
 
         # Loop through the messages using the facebook_extractor
         for data in self.facebook_extractor.distribute_get_posts(group=facebook_group):
@@ -112,7 +127,7 @@ class Train(View):
 
             # Update or create the user's messages
             FacebookPost.objects.update_or_create(id=data["message_id"], post=data["message_text"],
-                                                  facebook_user=facebook_user)
+                                                  facebook_user=facebook_user, defaults=dict())
 
         # Return a facebook extractor status, and the number of users in the group
         return "Successfully finished", FacebookUser.objects.filter(facebook_group=facebook_group).count()
