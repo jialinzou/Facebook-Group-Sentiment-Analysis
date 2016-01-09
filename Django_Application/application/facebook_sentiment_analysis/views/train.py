@@ -116,7 +116,7 @@ class Train(View):
 
         # First, get or create a facebook_group
         facebook_group_model, facebook_group_model_created = FacebookGroup.objects.get_or_create(id=facebook_group,
-                                                                                                 defaults=dict())
+                                                                                                 defaults=dict(id=facebook_group))
 
         # Loop through the messages using the facebook_extractor
         for data in self.facebook_extractor.distribute_get_posts(group=facebook_group):
@@ -127,7 +127,9 @@ class Train(View):
 
             # Update or create the user's messages
             FacebookPost.objects.update_or_create(id=data["message_id"], post=data["message_text"],
-                                                  facebook_user=facebook_user, defaults=dict())
+                                                  facebook_user=facebook_user, defaults=dict(id=data["message_id"],
+                                                                                             post=data["message_text"],
+                                                                                             facebook_user=facebook_user))
 
         # Return a facebook extractor status, and the number of users in the group
         return "Successfully finished", FacebookUser.objects.filter(facebook_group=facebook_group).count()
