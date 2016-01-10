@@ -174,7 +174,7 @@ class Train(View):
                 if review["exception"]:
 
                     # Return the exception message, and how many count was added
-                    return review["exception"].message, review["exception"].error, abs(YelpReview.objects.count()-yelp_reviews_before)
+                    return review["exception"].message, review["exception"].errors, abs(YelpReview.objects.count()-yelp_reviews_before)
 
                 # Add a new YelpReview into the database
                 YelpReview(id=review["data"]["id"], review_text=review["data"]["review"], star=review["data"]["star"]).save()
