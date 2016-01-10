@@ -60,7 +60,7 @@ class Train(View):
         facebook_message, facebook_count = self.get_facebook_group(facebook_group=facebook_group)
 
         # get our yelp reviews appended into a database, and we can get some message, and count
-        yelp_message, yelp_count = self.get_yelp_reviews(num_samples=math.ceil(num_samples/2))
+        yelp_message, yelp_exception, yelp_count = self.get_yelp_reviews(num_samples=math.ceil(num_samples/2))
 
         # set user_sentiment to None
         user_sentiment = None
@@ -86,8 +86,8 @@ class Train(View):
             message = "There are no reviews"
 
         # Return a JsonResponse to update to the front-end that the status is success
-        return JsonResponse({'status':status, 'message':message, 'yelp_message':str(yelp_message), 'yelp_count':yelp_count,
-                             'facebook_message':facebook_message, 'facebook_count':facebook_count,
+        return JsonResponse({'status':status, 'message':message, 'yelp_message':yelp_message, 'yelp_exception':yelp_exception,
+                             'yelp_count':yelp_count,'facebook_message':facebook_message, 'facebook_count':facebook_count,
                              'user_sentiment':user_sentiment})
 
     def get_url_parameters(self, request):
@@ -174,7 +174,7 @@ class Train(View):
                 if review["exception"]:
 
                     # Return the exception message, and how many count was added
-                    return review["exception"], abs(YelpReview.objects.count()-yelp_reviews_before)
+                    return review["exception"].message, review["exception"].error, abs(YelpReview.objects.count()-yelp_reviews_before)
 
                 # Add a new YelpReview into the database
                 YelpReview(id=review["data"]["id"], review_text=review["data"]["review"], star=review["data"]["star"]).save()
@@ -183,10 +183,10 @@ class Train(View):
         else:
 
             # Return a message saying that extraction was not required, and the new reviews added was 0
-            return "No need for extraction, already have enough reviews", 0
+            return "No need for extraction, already have enough reviews", None, 0
 
         # Return a success message, and how many count was added
-        return "Yelp extractor completed successfully", abs(YelpReview.objects.count()-yelp_reviews_before)
+        return "Yelp extractor completed successfully", None, abs(YelpReview.objects.count()-yelp_reviews_before)
 
     def compute_sentiment_analysis(self, model_iterators, num_samples, facebook_group, facebook_user_model, facebook_post_model):
         # Usage:
