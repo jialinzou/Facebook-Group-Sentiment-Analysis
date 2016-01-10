@@ -86,7 +86,7 @@ class Train(View):
             message = "There are no reviews"
 
         # Return a JsonResponse to update to the front-end that the status is success
-        return JsonResponse({'status':status, 'message':message, 'message':yelp_message, 'yelp_count':yelp_count,
+        return JsonResponse({'status':status, 'message':message, 'yelp_message':str(yelp_message), 'yelp_count':yelp_count,
                              'facebook_message':facebook_message, 'facebook_count':facebook_count,
                              'user_sentiment':user_sentiment})
 
