@@ -11,6 +11,22 @@
         <link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
     </head>
     <body>
+        <div class="ui segment">
+            <div class="ui input">
+                <input id="num_samples" type="text" placeholder="# of Samples" value="">
+            </div>
+            <div class="ui inverted divider"></div>
+            <div class="ui input">
+                <input id="facebook_group_name" type="text" placeholder="Facebook Group Name" value="">
+            </div>
+            <div class="ui inverted divider"></div>
+            <button id="compute" class="ui primary button">
+                Compute
+            </button>
+        </div>
 
+        <div class="ui segment">
+            <div id="compute_results"></div>
+        </div>
     </body>
 </html>
