@@ -30,13 +30,15 @@ $( document ).ready(function()
                                   </table>\
                               </div>";
 
-            for (var i = 0; i < data.user_sentiment.length; i++)
+            if (data.user_sentiment)
             {
-                html_mid += "<tr>";
-                html_mid += "<td>" + data.user_sentiment[i].username + "</td>";
-                html_mid += "<td>" + data.user_sentiment[i].user_id + "</td>";
-                html_mid += "<td>" + data.user_sentiment[i].mean_predicted_sentiment + "</td>";
-                html_mid += "<tr>";
+                for (var i = 0; i < data.user_sentiment.length; i++) {
+                    html_mid += "<tr>";
+                    html_mid += "<td>" + data.user_sentiment[i].username + "</td>";
+                    html_mid += "<td>" + data.user_sentiment[i].user_id + "</td>";
+                    html_mid += "<td>" + data.user_sentiment[i].mean_predicted_sentiment + "</td>";
+                    html_mid += "<tr>";
+                }
             }
 
             $("#compute_results").append(html_start+html_mid+html_end);
