@@ -8,4 +8,3 @@ beautifulsoup4
 psycopg2
 pymongo
 coveralls
-pyopenssl
